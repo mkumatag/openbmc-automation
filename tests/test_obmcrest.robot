@@ -318,3 +318,4 @@ post method org/openbmc/records/events/action/acceptTestMessage no args
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       ok
+    
