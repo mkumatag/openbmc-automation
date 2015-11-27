@@ -311,3 +311,10 @@ delete invalid method /org/nothere/
     should be equal as strings      ${resp.status_code}     ${HTTP_NOT_FOUND}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
+    
+post method org/openbmc/records/events/action/acceptTestMessage no args 
+    ${data} =   create dictionary   data=@{EMPTY}
+    ${resp} =   openbmc post request    org/openbmc/records/events/action/acceptTestMessage      data=${data}
+    should be equal as strings      ${resp.status_code}     ${HTTP_OK}
+    ${json} =   to json         ${resp.content}
+    should be equal as strings      ${json['status']}       ok
