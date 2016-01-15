@@ -23,51 +23,51 @@ Verify connection
 
 Execute ipmi BT capabilities command
     Run IPMI command            0x06 0x36
-    response Should Be Equal    " 01 3f 3f 0a 01"
+    response Should Be Equal    " 01 40 40 0a 01"
 
 Execute Set Sensor boot count
     Run IPMI command    0x04 0x30 0x09 0x01 0x00 0x35 0x00 0x00 0x00 0x00 0x00 0x00
-    Read the Attribute      /org/openbmc/sensor/virtual/BootCount   value
+    Read the Attribute      /org/openbmc/sensors/host/BootCount   value
     Response Should Be Equal    53
 
 Set Sensor Boot progress
     Run IPMI command  0x04 0x30 0x05 0xa9 0x00 0x04 0x00 0x00 0x00 0x00 0x14 0x00
-    Read the Attribute  /org/openbmc/sensor/virtual/BootProgress    value
+    Read the Attribute  /org/openbmc/sensors/host/BootProgress    value
     Response Should Be Equal    FW Progress, Baseboard Init
 
 Set Sensor Boot progress Longest string
     Run IPMI command  0x04 0x30 0x05 0xa9 0x00 0x04 0x00 0x00 0x00 0x00 0x0e 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/BootProgress    value
+    Read The Attribute  /org/openbmc/sensors/host/BootProgress    value
     Response Should Be Equal    FW Progress, Docking station attachment
 
 BootProgress sensor FW Hang unspecified Error
     Run IPMI command  0x04 0x30 0x05 0xa9 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/BootProgress    value
+    Read The Attribute  /org/openbmc/sensors/host/BootProgress    value
     Response Should Be Equal    FW Hang, Unspecified
 
 BootProgress fw hang state
     Run IPMI command  0x04 0x30 0x05 0xa9 0x00 0x01 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/BootProgress    value
+    Read The Attribute  /org/openbmc/sensors/host/BootProgress    value
     Response Should Be Equal    POST Error, unknown
 
 OperatingSystemStatus Sensor boot completed progress
     Run IPMI command  0x04 0x30 0x32 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/OperatingSystemStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/OperatingSystemStatus     value
     Response Should Be Equal    Boot completed (00)
 
 OperatingSystemStatus Sensor progress
     Run IPMI command  0x04 0x30 0x32 0x00 0x00 0x04 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/OperatingSystemStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/OperatingSystemStatus     value
     Response Should Be Equal    PXE boot completed
 
 OCC Active sensor on enabled
     Run IPMI command  0x04 0x30 0x08 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/OccStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/OccStatus     value
     Response Should Be Equal    Enabled
 
 OCC Active sensor on disabled
     Run IPMI command  0x04 0x30 0x08 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensor/virtual/OccStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/OccStatus     value
     Response Should Be Equal    Disabled
 
 CPU Present
@@ -88,7 +88,7 @@ CPU fault
 CPU no fault
     Run IPMI command  0x04 0x30 0x2f 0x00 0x00 0x00 0x00 0x00 0x01 0x00 0x20 0x00
     Read The Attribute   /org/openbmc/inventory/system/chassis/motherboard/cpu0    fault
-    Response Should Be Empty
+    Response Should Be Equal    False
 
 core Present
     Run IPMI command  0x04 0x30 0x2d 0xa9 0x00 0x80 0x00 0x00 0x00 0x00 0x20 0x00
@@ -108,7 +108,7 @@ core fault
 core no fault
     Run IPMI command  0x04 0x30 0x2d 0x00 0x00 0x00 0x00 0x00 0x01 0x00 0x20 0x00
     Read The Attribute   /org/openbmc/inventory/system/chassis/motherboard/cpu0/core11    fault
-    Response Should Be Empty
+    Response Should Be Equal    False
 
 DIMM3 Present
     Run IPMI command  0x04 0x30 0x21 0xa9 0x00 0x40 0x00 0x00 0x00 0x00 0x20 0x00
@@ -128,7 +128,7 @@ DIMM0 fault
 DIMM0 no fault
     Run IPMI command  0x04 0x30 0x1e 0x00 0x00 0x00 0x00 0x10 0x00 0x00 0x20 0x00
     Read The Attribute   /org/openbmc/inventory/system/chassis/motherboard/dimm0     fault
-    Response Should Be Empty
+    Response Should Be Equal    False
 
 Centaur0 Present
     Run IPMI command  0x04 0x30 0x2e 0xa9 0x00 0x40 0x00 0x00 0x00 0x00 0x20 0x00
@@ -148,7 +148,7 @@ Centaur0 fault
 Centaur0 no fault
     Run IPMI command  0x04 0x30 0x2e 0x00 0x00 0x00 0x00 0x10 0x00 0x00 0x20 0x00
     Read The Attribute   /org/openbmc/inventory/system/chassis/motherboard/centaur0    fault
-    Response Should Be Empty
+    Response Should Be Equal    False
 
 
 *** Keywords ***
