@@ -140,6 +140,4 @@ Call Method
     [arguments]    ${uri}    ${method}    &{kwargs}
     ${base_uri}=    Catenate    SEPARATOR=    ${DBUS_PREFIX}    ${uri}
     ${resp} =       openbmc post request    ${base_uri}/action/${method}     &{kwargs}
-    should be equal as strings      ${resp.status_code}     ${HTTP_OK}
-    ${json} =   to json         ${resp.content}
-    should be equal as strings      ${json['status']}       ok
+    [return]     ${resp}
