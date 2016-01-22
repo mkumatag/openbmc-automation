@@ -98,6 +98,11 @@ OpenBMC Delete Request
 
 Initialize OpenBMC
     Create Session    openbmc    ${AUTH_URI}
+    ${headers}=     Create Dictionary   Content-Type=application/json
+    @{credentials} =   Create List     ${OPENBMC_USERNAME}      ${OPENBMC_PASSWORD}
+    ${data} =   create dictionary   data=@{credentials}
+    ${resp} =   Post Request    openbmc    /login    data=${data}   headers=${headers}
+    should be equal as strings      ${resp.status_code}     ${HTTP_OK}
 
 Log Request
     [Arguments]    &{kwargs}
