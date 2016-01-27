@@ -6,9 +6,8 @@ Documentation          This example demonstrates executing commands on a remote 
 ...                    teardown. This saves some time when executing several test cases.
 
 Resource        ../lib/rest_client.robot
+Resource        ../lib/ipmi_client.robot
 
-
-Library                SSHLibrary
 Suite Setup            Open Connection And Log In
 Suite Teardown         Close All Connections
 
@@ -168,12 +167,3 @@ Read the Attribute
     [arguments]    ${uri}    ${parm}
     ${output} =     Read Attribute      ${uri}    ${parm}
     set test variable    ${OUTPUT}     ${output}
-
-Open Connection And Log In
-    Open connection     ${OPENBMC_HOST}
-    Login   ${OPENBMC_USERNAME}    ${OPENBMC_PASSWORD}
-
-Run IPMI Command
-    [arguments]    ${args}
-    ${output}=  Execute Command    /usr/sbin/ipmitool -I dbus raw ${args}
-    set test variable    ${OUTPUT}     "${output}"
