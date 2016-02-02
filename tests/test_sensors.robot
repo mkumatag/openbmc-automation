@@ -149,6 +149,31 @@ Centaur0 no fault
     Read The Attribute   /org/openbmc/inventory/system/chassis/motherboard/centaur0    fault
     Response Should Be Equal    False
 
+System Present
+    Read The Attribute   /org/openbmc/inventory/system    present
+    Response Should Be Equal    True
+    
+System Fault
+    Read The Attribute   /org/openbmc/inventory/system    fault
+    Response Should Be Equal    False
+    
+Chassis Present
+    Read The Attribute   /org/openbmc/inventory/system/chassis    present
+    Response Should Be Equal    True
+    
+Chassis Fault
+    Read The Attribute   /org/openbmc/inventory/system/chassis    fault
+    Response Should Be Equal    False
+    
+io_board Present
+    Read The Attribute   /org/openbmc/inventory/system/chassis/io_board    present
+    Response Should Be Equal    True
+    
+io_board Fault
+    Read The Attribute   /org/openbmc/inventory/system/chassis/io_board    fault
+    Response Should Be Equal    False
+    
+
 
 *** Keywords ***
 Execute new Command
