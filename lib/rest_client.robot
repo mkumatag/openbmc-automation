@@ -81,6 +81,8 @@ OpenBMC Post Request
 OpenBMC Put Request
     [Arguments]    ${uri}    &{kwargs}
     ${base_uri}=    Catenate    SEPARATOR=    ${DBUS_PREFIX}    ${uri}
+    ${headers}=     Create Dictionary   Content-Type=application/json
+    set to dictionary   ${kwargs}       headers     ${headers}
     Log Request    method=Put    base_uri=${base_uri}    args=&{kwargs}
     Initialize OpenBMC
     ${ret}=    Put Request    openbmc    ${base_uri}    &{kwargs}
@@ -120,6 +122,12 @@ Read Attribute
     ${content}=     To Json    ${resp.content}
     [return]    ${content["data"]}
 
+Write Attribute
+    [Arguments]    ${uri}      ${attr}    &{kwargs}
+    ${base_uri}=    Catenate    SEPARATOR=    ${DBUS_PREFIX}    ${uri}
+    ${resp} =       openbmc put request    ${base_uri}/attr/${attr}     &{kwargs}
+    should be equal as strings      ${resp.status_code}     ${HTTP_OK}  
+    ${json} =   to json         ${resp.content}
 
 Read Properties
     [arguments]    ${uri}
@@ -127,3 +135,9 @@ Read Properties
     Should Be Equal As Strings    ${resp.status_code}    ${HTTP_OK}
     ${content}=     To Json    ${resp.content}
     [return]    ${content["data"]}
+
+Call Method
+    [arguments]    ${uri}    ${method}    &{kwargs}
+    ${base_uri}=    Catenate    SEPARATOR=    ${DBUS_PREFIX}    ${uri}
+    ${resp} =       openbmc post request    ${base_uri}/action/${method}     &{kwargs}
+    [return]     ${resp}

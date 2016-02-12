@@ -17,6 +17,11 @@ Run IPMI Command
     ${output}=  Execute Command    /tmp/ipmitool -I dbus raw ${args}
     set test variable    ${OUTPUT}     "${output}"
 
+Run IPMI Standard Command
+    [arguments]    ${args}
+    ${output}=  Execute Command    /tmp/ipmitool -I dbus ${args}
+    [return]  ${output}
+
 Copy ipmitool
     Import Library      SCPLibrary      WITH NAME       scp
     scp.Open connection     ${OPENBMC_HOST}     username=${OPENBMC_USERNAME}      password=${OPENBMC_PASSWORD}
