@@ -12,6 +12,10 @@ Test SSL Connection
     [Documentation]     This testcase is for testing the SSL connection to the
     ...     OpenBMC machine.
     Create Session    openbmc    https://${OPENBMC_HOST}/
+    ${headers}=     Create Dictionary   Content-Type=application/json
+    @{credentials} =   Create List     ${OPENBMC_USERNAME}      ${OPENBMC_PASSWORD}
+    ${data} =   create dictionary   data=@{credentials}
+    ${resp} =   Post Request    openbmc    /login    data=${data}   headers=${headers}
     ${resp}=    Get Request    openbmc   /list
     Should Be Equal As Strings    ${resp.status_code}    ${HTTP_OK}
     ${jsondata}=    To Json    ${resp.content}
