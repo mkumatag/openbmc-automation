@@ -16,6 +16,13 @@ ${MACHINE_TYPE}    palmetto
 ${DBUS_POLL_INTERVAL}      15s
 ${OPENBMC_REBOOT_TIMEOUT}   ${10}
 
+# PDU related parameters
+${PDU_TYPE}         ${EMPTY}
+${PDU_IP}           ${EMPTY}
+${PDU_USERNAME}     ${EMPTY}
+${PDU_PASSWORD}     ${EMPTY}
+${PDU_SLOT_NO}      ${EMPTY}
+
 *** Keywords ***
 Get Inventory Schema
     [Arguments]    ${machine}
