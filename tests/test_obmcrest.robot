@@ -251,8 +251,8 @@ delete invalid names /org/nothere/
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
 
-get method /org/openbmc/control/fan0/action/setspeed
-    ${resp} =   openbmc get request     /org/openbmc/control/fan0/action/setspeed
+get method org/openbmc/records/events/action/acceptTestMessage
+    ${resp} =   openbmc get request     org/openbmc/records/events/action/acceptTestMessage
     should be equal as strings      ${resp.status_code}     ${HTTP_METHOD_NOT_ALLOWED} 
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
@@ -263,8 +263,8 @@ get invalid method /i/dont/exist/
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
 
-put method /org/openbmc/control/fan0/action/setspeed
-    ${resp} =   openbmc put request     /org/openbmc/control/fan0/action/setspeed
+put method org/openbmc/records/events/action/acceptTestMessage
+    ${resp} =   openbmc put request     org/openbmc/records/events/action/acceptTestMessage
     should be equal as strings      ${resp.status_code}     ${HTTP_METHOD_NOT_ALLOWED} 
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
@@ -275,33 +275,35 @@ put invalid method /i/dont/exist/
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
 
-post method /org/openbmc/control/fan0/action/getspeed no args
+post method power/getPowerState no args
+    ${fan_uri}=     Get Power Control Interface
     ${data} =   create dictionary   data=@{EMPTY}
-    ${resp} =   openbmc post request    /org/openbmc/control/fan0/action/getspeed      data=${data}
+    ${resp} =   openbmc post request    ${fan_uri}/action/getPowerState      data=${data}
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       ok
 
-post method /org/openbmc/control/fan0/action/setspeed invalid args
+post method org/openbmc/records/events/action/acceptTestMessage invalid args
     ${data} =   create dictionary   foo=bar
-    ${resp} =   openbmc post request    /org/openbmc/control/fan0/action/setspeed      data=${data}
+    ${resp} =   openbmc post request    org/openbmc/records/events/action/acceptTestMessage      data=${data}
     should be equal as strings      ${resp.status_code}     ${HTTP_BAD_REQUEST}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
 
 post method /org/openbmc/control/fan0/action/setspeed with args
+    ${fan_uri}=     Get Fan Speed Interface
     ${SPEED}=   Set Variable    ${200}
     @{speed_list} =   Create List     ${SPEED}
     ${data} =   create dictionary   data=@{speed_list}
-    ${resp} =   openbmc post request    /org/openbmc/control/fan0/action/setspeed      data=${data}
+    ${resp} =   openbmc post request    ${fan_uri}/action/setValue      data=${data}
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       ok
-    ${content}=     Read Attribute      /org/openbmc/control/fan0   speed
+    ${content}=     Read Attribute      ${fan_uri}   value
     Should Be Equal     ${content}      ${SPEED}
 
-delete method /org/openbmc/control/fan0/action/setspeed 
-    ${resp} =   openbmc delete request  /org/openbmc/control/fan0/action/setspeed
+delete method org/openbmc/records/events/action/acceptTestMessage
+    ${resp} =   openbmc delete request  org/openbmc/records/events/action/acceptTestMessage
     should be equal as strings      ${resp.status_code}     ${HTTP_METHOD_NOT_ALLOWED} 
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
@@ -318,4 +320,24 @@ post method org/openbmc/records/events/action/acceptTestMessage no args
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       ok
-    
+
+***keywords***
+Get Fan Speed Interface
+    ${resp}=    OpenBMC Get Request     /org/openbmc/sensors/speed/
+    should be equal as strings      ${resp.status_code}     ${HTTP_OK}     msg=Unable to get any fan controls
+    ${jsondata}=   To Json    ${resp.content}
+    log     ${jsondata}
+    : FOR    ${ELEMENT}    IN    @{jsondata["data"]}
+    \   log     ${ELEMENT}
+    \   ${found}=   Get Lines Matching Pattern      ${ELEMENT}      *speed/fan*
+    \   Return From Keyword If     '${found}' != ''     ${found}
+
+Get Power Control Interface
+    ${resp}=    OpenBMC Get Request     /org/openbmc/control/
+    should be equal as strings      ${resp.status_code}     ${HTTP_OK}     msg=Unable to get any controls - /org/openbmc/control/
+    ${jsondata}=   To Json    ${resp.content}
+    log     ${jsondata}
+    : FOR    ${ELEMENT}    IN    @{jsondata["data"]}
+    \   log     ${ELEMENT}
+    \   ${found}=   Get Lines Matching Pattern      ${ELEMENT}      *control/power*
+    \   Return From Keyword If     '${found}' != ''     ${found}

@@ -4,6 +4,8 @@ Documentation           This suite is for testing OCC: Power capping setting
 Resource                ../lib/rest_client.robot
 Resource                ../lib/resource.txt
 
+Suite Setup            Host PowerOn
+
 *** Test Cases ***
 
 Get OCC status
@@ -107,3 +109,31 @@ Get OCC status
     ${resp} =   openbmc post request    ${occstatus_link}/action/getValue      data=${data}
     ${jsondata}=   To Json    ${resp.content}
     [return]    ${jsondata["data"]}
+
+Get Chassis URI
+    ${resp}=    OpenBMC Get Request     /org/openbmc/control/
+    ${jsondata}=   To Json    ${resp.content}
+    log     ${jsondata}
+    : FOR    ${ELEMENT}    IN    @{jsondata["data"]}
+    \   log     ${ELEMENT}
+    \   ${found}=   Get Lines Matching Pattern      ${ELEMENT}      *control/chassis*
+    \   Return From Keyword If     '${found}' != ''     ${found}
+
+Host PowerOn
+    [Documentation]     Keyword to poweron the host and wait till boot up
+    ${chassis_uri}=     Get Chassis URI
+    Should Not Be Empty     ${chassis_uri}      msg=Failed to get the chassis URI in the openbmc machine
+    ${data}=    create dictionary   data=@{EMPTY}
+    ${resp}=    openbmc post request     ${chassis_uri}/action/powerOn      data=${data}
+    Wait For Host To Bootup
+    Sleep   120sec
+
+Wait For Host To Bootup
+    [Documentation]     Polling method to wait till HOST OS boots up
+    Wait Until Keyword Succeeds     10min    5 sec   Host Booted
+
+Host Booted
+    ${data}=    create dictionary   data=@{EMPTY}
+    ${resp}=    openbmc post request     /org/openbmc/managers/System/action/getSystemState      data=${data}
+    ${jsondata}=   To Json    ${resp.content}
+    Should Be Equal     HOST_BOOTED     ${jsondata["data"]}
