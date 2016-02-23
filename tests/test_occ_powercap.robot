@@ -65,6 +65,15 @@ Disable PowerCap
     ${user_power_cap}=  Get User PowerCap
     Should Be Equal     ${user_power_cap}    ${0}
 
+Get System Power Consumption
+    [Documentation]   Get the current system power consumption and check if the 
+    ...               value is greater than zero
+    
+    ${resp} =   OpenBMC Get Request   /org/openbmc/sensors/powercap/system_power
+    should be equal as strings   ${resp.status_code}   ${HTTP_OK}
+    ${jsondata}=   To Json    ${resp.content}
+    Should Be True   ${jsondata["data"]["value"]} > 0
+
 *** Keywords ***
 
 Get Minimum PowerCap
