@@ -62,12 +62,12 @@ OperatingSystemStatus Sensor progress
 
 OCC Active sensor on enabled
     Run IPMI command  0x04 0x30 0x08 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensors/host/OccStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/cpu0/OccStatus     value
     Response Should Be Equal    Enabled
 
 OCC Active sensor on disabled
     Run IPMI command  0x04 0x30 0x08 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x20 0x00
-    Read The Attribute  /org/openbmc/sensors/host/OccStatus     value
+    Read The Attribute  /org/openbmc/sensors/host/cpu0/OccStatus     value
     Response Should Be Equal    Disabled
 
 CPU Present
