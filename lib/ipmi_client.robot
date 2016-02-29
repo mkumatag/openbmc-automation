@@ -20,6 +20,7 @@ Run IPMI Command
 Run IPMI Standard Command
     [arguments]    ${args}
     ${output}=  Execute Command    /tmp/ipmitool -I dbus ${args}
+    Return From Keyword If    '${output}' == ''    error
     [return]  ${output}
 
 Copy ipmitool
