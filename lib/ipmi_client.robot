@@ -19,9 +19,9 @@ Run IPMI Command
 
 Run IPMI Standard Command
     [arguments]    ${args}
-    ${output}=  Execute Command    /tmp/ipmitool -I dbus ${args}
-    Return From Keyword If    '${output}' == ''    error
-    [return]  ${output}
+    ${stdout}    ${stderr}    ${output}=  Execute Command    /tmp/ipmitool -I dbus ${args}    return_stdout=True    return_stderr= True    return_rc=True
+    Should Be Equal    ${output}    ${0}    msg=${stderr}
+    [return]    ${stdout}
 
 Copy ipmitool
     Import Library      SCPLibrary      WITH NAME       scp
