@@ -12,3 +12,4 @@ Validate Prereq
 PDU Power Cycle
     Validate Prereq
     Import Resource  ${CURDIR}/../../lib/pdu/${PDU_TYPE}.robot
+    Power Cycle
