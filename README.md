@@ -35,7 +35,12 @@ Use Following Variables for networking test cases
     $ export PDU_SLOT_NO=<SLOT number>
 
     for PDU_TYPE we support only synaccess at the moment
-    
+
+Use following variables for syslog test cases
+==========================================================
+    $ export SYSLOG_IP_ADDRESS=<remote syslog system ip>
+    $ export SYSLOG_PORT=<remote syslog system port>
+
 ```
 
 Run tests

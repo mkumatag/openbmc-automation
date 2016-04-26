@@ -9,3 +9,5 @@ echo "--variable PDU_IP:$PDU_IP" >> $ARG_FILE
 echo "--variable PDU_USERNAME:$PDU_USERNAME" >> $ARG_FILE
 echo "--variable PDU_PASSWORD:$PDU_PASSWORD" >> $ARG_FILE
 echo "--variable PDU_SLOT_NO:$PDU_SLOT_NO" >> $ARG_FILE
+echo "--variable SYSLOG_IP_ADDRESS:$SYSLOG_IP_ADDRESS" >> $ARG_FILE
+echo "--variable SYSLOG_PORT:$SYSLOG_PORT" >> $ARG_FILE
