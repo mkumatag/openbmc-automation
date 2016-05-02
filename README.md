@@ -17,6 +17,7 @@ Initilize the following environment variable which will used while testing
     $ export OPENBMC_HOST=<openbmc machine ip address>
     $ export OPENBMC_PASSWORD=<openbmc username>
     $ export OPENBMC_USERNAME=<openbmc password>
+    $ export OPENBMC_MODEL=[./data/Barreleye.py, ./data/Palmetto.py, etc]
 
     Use following parameters for PDU:
     $ export PDU_IP=<PDU IP address>
@@ -36,12 +37,20 @@ Run tests
 
 How to test individual test
 ```shell
-    $ tox -e custom <test file>
-    e.g:
-    $ tox -e custom tests/test_buster.robot
+    One specific test
+    $ tox -e custom -- -t '"DIMM0 no fault"' tests/test_sensors.robot
+
+    No preset environment variables, one test case from one test suite
+    $ OPENBMC_HOST=x.x.x.x tox -e barreleye -- -t '"DIMM0 no fault"' tests/test_sensors.robot
+
+    No preset environment variables, one test suite  for a palmetto system
+    $ OPENBMC_HOST=x.x.x.x tox -e palmetto -- tests/test_sensors.robot
+
+    No preset environment variables, the entire test suite for a barreleye system
+    $ OPENBMC_HOST=x.x.x.x tox -e barreleye -- tests
 ```
 
 It can also be run by pasing variables from the cli...
 ```shell
-    $  pybot -v OPENBMC_HOST:<ip> -v OPENBMC_USERNAME:root -v OPENBMC_PASSWORD:0penBmc 
+    $  pybot -v OPENBMC_HOST:<ip> -v OPENBMC_USERNAME:root -v OPENBMC_PASSWORD:0penBmc -v OPENBMC_MODEL:<model path>
 ```
