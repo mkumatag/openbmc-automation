@@ -19,6 +19,14 @@ Initilize the following environment variable which will used while testing
     $ export OPENBMC_USERNAME=<openbmc password>
     $ export OPENBMC_MODEL=[./data/Barreleye.py, ./data/Palmetto.py, etc]
 
+
+Use Following Variables for networking test cases
+===========================================================    
+    $export NEW_BMC_IP=<openbmc machine ip address>
+    $export NEW_SUBNET_MASK=<openbmc new subnet mask>
+    $export NEW_GATEWAY=<openbmc new gateway>    
+==========================================================
+
     Use following parameters for PDU:
     $ export PDU_IP=<PDU IP address>
     $ export PDU_USERNAME=<PDU username>
