@@ -25,8 +25,8 @@ Test non-SSL Connection to port 80
     [Documentation]     This testcase is for test to check OpenBMC machine
     ...     will not accepts the non-secure connection that is with http to
     ...     port 80 and expect a connection error
-    Create Session    openbmc    http://${OPENBMC_HOST}/
-    Run Keyword And Expect Error    ConnectionError*   Get Request    openbmc   /list
+    Create Session    openbmc    http://${OPENBMC_HOST}/    timeout=3
+    Run Keyword And Expect Error    ConnectTimeout*   Get Request    openbmc   /list
 
 Test non-SSL Connection to port 443
     [Documentation]     This testcase is for test to check OpenBMC machine

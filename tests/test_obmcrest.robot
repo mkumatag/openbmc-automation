@@ -290,17 +290,17 @@ post method org/openbmc/records/events/action/acceptTestMessage invalid args
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       error
 
-post method /org/openbmc/control/fan0/action/setspeed with args
-    ${fan_uri}=     Get Fan Speed Interface
-    ${SPEED}=   Set Variable    ${200}
-    @{speed_list} =   Create List     ${SPEED}
-    ${data} =   create dictionary   data=@{speed_list}
-    ${resp} =   openbmc post request    ${fan_uri}/action/setValue      data=${data}
+post method org/openbmc/sensors/host/BootCount with args
+    ${uri} =     Set Variable   /org/openbmc/sensors/host/BootCount
+    ${COUNT}=   Set Variable    ${3}
+    @{count_list} =   Create List     ${COUNT}
+    ${data} =   create dictionary   data=@{count_list}
+    ${resp} =   openbmc post request    ${uri}/action/setValue      data=${data}
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     ${json} =   to json         ${resp.content}
     should be equal as strings      ${json['status']}       ok
-    ${content}=     Read Attribute      ${fan_uri}   value
-    Should Be Equal     ${content}      ${SPEED}
+    ${content}=     Read Attribute      ${uri}   value
+    Should Be Equal     ${content}      ${COUNT}
 
 delete method org/openbmc/records/events/action/acceptTestMessage
     ${resp} =   openbmc delete request  org/openbmc/records/events/action/acceptTestMessage
@@ -322,16 +322,6 @@ post method org/openbmc/records/events/action/acceptTestMessage no args
     should be equal as strings      ${json['status']}       ok
 
 ***keywords***
-Get Fan Speed Interface
-    ${resp}=    OpenBMC Get Request     /org/openbmc/sensors/speed/
-    should be equal as strings      ${resp.status_code}     ${HTTP_OK}     msg=Unable to get any fan controls
-    ${jsondata}=   To Json    ${resp.content}
-    log     ${jsondata}
-    : FOR    ${ELEMENT}    IN    @{jsondata["data"]}
-    \   log     ${ELEMENT}
-    \   ${found}=   Get Lines Matching Pattern      ${ELEMENT}      *speed/fan*
-    \   Return From Keyword If     '${found}' != ''     ${found}
-
 Get Power Control Interface
     ${resp}=    OpenBMC Get Request     /org/openbmc/control/
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}     msg=Unable to get any controls - /org/openbmc/control/

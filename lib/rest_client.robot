@@ -136,7 +136,7 @@ Write Attribute
 
 Read Properties
     [arguments]    ${uri}
-    ${resp} =   OpenBMC Get Request    ${uri}
+    ${resp} =   OpenBMC Get Request    ${uri}   timeout=10
     Should Be Equal As Strings    ${resp.status_code}    ${HTTP_OK}
     ${content}=     To Json    ${resp.content}
     [return]    ${content["data"]}

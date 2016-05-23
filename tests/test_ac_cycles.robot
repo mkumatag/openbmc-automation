@@ -9,6 +9,7 @@ Library         SSHLibrary
 
 *** Test Cases ***
 Test openbmc buster
+    [Tags]      reboot_tests
     Open Connection And Log In
     ${output}=  Execute Command    find /var/lib -type f |xargs -n 1 touch
     PDU Power Cycle
