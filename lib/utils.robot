@@ -1,7 +1,11 @@
 *** Settings ***
 Resource                ../lib/resource.txt
+Resource                ../lib/rest_client.robot
 
 Library                 OperatingSystem
+
+*** Variables ***
+${SYSTEM_SHUTDOWN_TIME}       ${5}
 
 *** Keywords ***
 
@@ -40,3 +44,11 @@ Power Off Host
     ${resp}=   Call Method    /org/openbmc/control/chassis0/    powerOff   data=${args}
     should be equal as strings      ${resp.status_code}     ${HTTP_OK}
     Wait Until Keyword Succeeds	  1 min    	10 sec    Is Power Off
+
+Trigger Warm Reset
+    log to console    "Triggering warm reset"
+    ${data} =   create dictionary   data=@{EMPTY}
+    ${resp} =   openbmc post request    /org/openbmc/control/bmc0/action/warmReset     data=${data}
+    Should Be Equal As Strings      ${resp.status_code}     ${HTTP_OK}
+    Sleep   ${SYSTEM_SHUTDOWN_TIME}min
+    Wait For Host To Ping   ${OPENBMC_HOST}
