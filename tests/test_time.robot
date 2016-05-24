@@ -13,8 +13,7 @@ Suite Teardown          Close All Connections
 *** Variables ***
 ${SYSTEM_TIME_INVALID}     01/01/1969 00:00:00
 ${SYSTEM_TIME_VALID}       02/29/2016 09:10:00
-${SET_EPOCH_TIME}       01/01/1970 00:00:00
-${ALLOWED_TIME_DIFF}    2
+${ALLOWED_TIME_DIFF}       2
 
 *** Test Cases ***
 
@@ -35,24 +34,6 @@ Set Valid System Time
     ...               This test case tries to set system time using IPMI and
     ...               then tries to cross check if it is correctly set in BMC.
     ...               Expectation is that BMC time should match with new time.
-
-    ${resp}=    Run IPMI Standard Command    sel time set "${SYSTEM_TIME_VALID}"
-    ${setdate}=    Convert Date    ${SYSTEM_TIME_VALID}    date_format=%m/%d/%Y %H:%M:%S    exclude_millis=yes
-    ${bmcdate}=    Get BMC Time And Date
-    ${diff}=    Subtract Date From Date    ${bmcdate}    ${setdate}
-    Should Be True      ${diff} < ${ALLOWED_TIME_DIFF}     Open BMC time does not match with set time
-
-Set System Time after setting epoch time
-    [Documentation]   ***GOOD PATH***
-    ...               This test case tries to set system time to epoch time using ipmi
-    ...               and then tries to set to to valid time.
-    ...               Expectation is that new time can be set on a system with epoch time.
-
-    ${resp}=    Run IPMI Standard Command    sel time set "${SET_EPOCH_TIME}"
-    ${setdate_epoch}=    Convert Date    ${SET_EPOCH_TIME}    date_format=%m/%d/%Y %H:%M:%S    exclude_millis=yes
-    ${bmcdate}=    Get BMC Time And Date
-    ${diff}=    Subtract Date From Date    ${bmcdate}    ${setdate_epoch}
-    Should Be True      ${diff} < ${ALLOWED_TIME_DIFF}    Open BMC time does not match with epoch time
 
     ${resp}=    Run IPMI Standard Command    sel time set "${SYSTEM_TIME_VALID}"
     ${setdate}=    Convert Date    ${SYSTEM_TIME_VALID}    date_format=%m/%d/%Y %H:%M:%S    exclude_millis=yes
