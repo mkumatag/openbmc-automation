@@ -466,7 +466,8 @@ GPIO_CONFIG['CP0_DEVICES_RESET_N'] = \
         {'gpio_pin': 'N3', 'direction': 'out'}
 GPIO_CONFIG['CP1_DEVICES_RESET_N'] = \
         {'gpio_pin': 'N5', 'direction': 'out'}
-
+GPIO_CONFIG['IDBTN']       = \
+        { 'gpio_pin': 'Q7', 'direction': 'out' }
 GPIO_CONFIG['FSI_DATA'] = \
         {'gpio_pin': 'A5', 'direction': 'out'}
 GPIO_CONFIG['FSI_CLK'] = \
@@ -607,4 +608,19 @@ HWMON_CONFIG = {
         '101' :  { 'object_path' : 'temperature/membuf7','poll_interval' : 5000,'scale' : 1000,'units' : 'C' },
         }
     },
+}
+
+
+# Miscellaneous non-poll sensor with system specific properties.
+# The sensor id is the same as those defined in ID_LOOKUP['SENSOR'].
+MISC_SENSORS = {
+	0x5f : { 'class' : 'BootCountSensor' },
+	0x05 : { 'class' : 'BootProgressSensor' },
+	0x08 : { 'class' : 'OccStatusSensor',
+		'os_path' : '/sys/class/i2c-adapter/i2c-3/3-0050/online' },
+	0x09 : { 'class' : 'OccStatusSensor',
+		'os_path' : '/sys/class/i2c-adapter/i2c-3/3-0051/online' },
+	0xb5 : { 'class' : 'OperatingSystemStatusSensor' },
+	0xb3 : { 'class' : 'PowerCap',
+		'os_path' : '/sys/class/hwmon/hwmon3/user_powercap' },
 }

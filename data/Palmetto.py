@@ -123,6 +123,12 @@ APPS = {
 		'monitor_process' : True,
 		'process_name'    : 'flash_bios.exe',
 	},
+	'bmc_flash_control' : {
+		'system_state'    : 'BMC_STARTING',
+		'start_process'   : True,
+		'monitor_process' : True,
+		'process_name'    : 'bmc_update.py',
+	},
 	'download_manager' : {
 		'system_state'    : 'BMC_STARTING',
 		'start_process'   : True,
@@ -184,7 +190,7 @@ FRU_INSTANCES = {
 	'<inventory_root>/system/chassis/motherboard/cpu0/core11' : { 'fru_type' : 'CORE', 'is_fru' : False, },
 
 	
-	'<inventory_root>/system/chassis/motherboard/centaur0' : { 'fru_type' : 'MEMORY_BUFFER', 'is_fru' : False, },
+	'<inventory_root>/system/chassis/motherboard/membuf0' : { 'fru_type' : 'MEMORY_BUFFER', 'is_fru' : False, },
 
 	'<inventory_root>/system/chassis/motherboard/dimm0' : { 'fru_type' : 'DIMM', 'is_fru' : True,},
 	'<inventory_root>/system/chassis/motherboard/dimm1' : { 'fru_type' : 'DIMM', 'is_fru' : True,},
@@ -206,7 +212,7 @@ ID_LOOKUP = {
 		0x0d : '<inventory_root>/system/chassis',
 		0x34 : '<inventory_root>/system/chassis/motherboard',
 		0x01 : '<inventory_root>/system/chassis/motherboard/cpu0',
-		0x02 : '<inventory_root>/system/chassis/motherboard/centaur0',
+		0x02 : '<inventory_root>/system/chassis/motherboard/membuf0',
 		0x03 : '<inventory_root>/system/chassis/motherboard/dimm0',
 		0x04 : '<inventory_root>/system/chassis/motherboard/dimm1',
 		0x05 : '<inventory_root>/system/chassis/motherboard/dimm2',
@@ -217,7 +223,7 @@ ID_LOOKUP = {
 		'PRODUCT_15' : '<inventory_root>/system',
 		'CHASSIS_2' : '<inventory_root>/system/chassis',
 		'BOARD_1'   : '<inventory_root>/system/chassis/motherboard/cpu0',
-		'BOARD_2'   : '<inventory_root>/system/chassis/motherboard/centaur0',
+		'BOARD_2'   : '<inventory_root>/system/chassis/motherboard/membuf0',
 		'BOARD_14'   : '<inventory_root>/system/chassis/motherboard',
 		'PRODUCT_3'   : '<inventory_root>/system/chassis/motherboard/dimm0',
 		'PRODUCT_4'   : '<inventory_root>/system/chassis/motherboard/dimm1',
@@ -244,7 +250,7 @@ ID_LOOKUP = {
 		0x2b : '<inventory_root>/system/chassis/motherboard/cpu0/core9',
 		0x2c : '<inventory_root>/system/chassis/motherboard/cpu0/core10',
 		0x2d : '<inventory_root>/system/chassis/motherboard/cpu0/core11',
-		0x2e : '<inventory_root>/system/chassis/motherboard/centaur0',
+		0x2e : '<inventory_root>/system/chassis/motherboard/membuf0',
 		0x1e : '<inventory_root>/system/chassis/motherboard/dimm0',
 		0x1f : '<inventory_root>/system/chassis/motherboard/dimm1',
 		0x20 : '<inventory_root>/system/chassis/motherboard/dimm2',
@@ -269,6 +275,7 @@ GPIO_CONFIG['POWER_PIN']  =   { 'gpio_pin': 'E1', 'direction': 'out'  }
 GPIO_CONFIG['CRONUS_SEL'] =   { 'gpio_pin': 'A6', 'direction': 'out'  }
 GPIO_CONFIG['PGOOD']      =   { 'gpio_pin': 'C7', 'direction': 'in'  }
 GPIO_CONFIG['BMC_THROTTLE'] = { 'gpio_pin': 'J3', 'direction': 'out' }
+GPIO_CONFIG['IDBTN']       = { 'gpio_pin': 'Q7', 'direction': 'out' }
 GPIO_CONFIG['POWER_BUTTON'] = { 'gpio_pin': 'E0', 'direction': 'both' }
 GPIO_CONFIG['PCIE_RESET']   = { 'gpio_pin': 'B5', 'direction': 'out' }
 GPIO_CONFIG['USB_RESET']    = { 'gpio_pin': 'B6', 'direction': 'out' }
@@ -305,4 +312,16 @@ HWMON_CONFIG = {
 			'caps_user_powerlimit' : { 'object_path' : 'powercap/user_cap','poll_interval' : 10000,'scale' : 1,'units' : 'W' },
 		}
 	}
+}
+
+# Miscellaneous non-poll sensor with system specific properties.
+# The sensor id is the same as those defined in ID_LOOKUP['SENSOR'].
+MISC_SENSORS = {
+	0x09 : { 'class' : 'BootCountSensor' },
+	0x05 : { 'class' : 'BootProgressSensor' },
+	0x08 : { 'class' : 'OccStatusSensor',
+		'os_path' : '/sys/class/i2c-adapter/i2c-3/3-0050/online' },
+	0x32 : { 'class' : 'OperatingSystemStatusSensor' },
+	0x33 : { 'class' : 'PowerCap',
+		'os_path' : '/sys/class/hwmon/hwmon1/user_powercap' },
 }
