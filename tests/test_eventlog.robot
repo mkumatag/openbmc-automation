@@ -13,7 +13,7 @@ Library         SSHLibrary
 *** Variables ***
 &{NIL}  data=@{EMPTY}
 ${SYSTEM_SHUTDOWN_TIME}     1min
-${WAIT_FOR_SERVICES_UP}     2min
+${WAIT_FOR_SERVICES_UP}     3min
 
 *** Test Cases ***
 
