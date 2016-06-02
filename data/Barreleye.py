@@ -539,6 +539,7 @@ GPIO_CONFIG['POWER_BUTTON'] = { 'gpio_pin': 'E0', 'direction': 'both' }
 GPIO_CONFIG['PCIE_RESET']   = { 'gpio_pin': 'B5', 'direction': 'out' }
 GPIO_CONFIG['USB_RESET']    = { 'gpio_pin': 'B6', 'direction': 'out' }
 
+GPIO_CONFIG['IDBTN']       = { 'gpio_pin': 'Q7', 'direction': 'out' }
 GPIO_CONFIG['BMC_THROTTLE']       = { 'gpio_pin': 'J3', 'direction': 'out' }
 GPIO_CONFIG['RESET_BUTTON']       = { 'gpio_pin': 'E2', 'direction': 'both' }
 GPIO_CONFIG['CPLD_TCK']    	  =   { 'gpio_pin': 'P0', 'direction': 'out' }
@@ -716,5 +717,40 @@ HWMON_CONFIG = {
 		'101' :  { 'object_path' : 'temperature/membuf7','poll_interval' : 5000,'scale' : 1000,'units' : 'C' },
 		}
 	},
+	'4-0010' :  {
+		'names' : {
+			# Barreleye uses 0.25 millioohms sense resistor for adm1278
+			# To convert Iout register value Y to real-world value X, use an equation:
+			# X= 1/m * (Y * 10^-R - b), here m = 800 * R_sense, and R_sense is expressed in milliohms.
+			# The adm1278 driver did the conversion, but the R_sense is set here as a scale factor. 
+			'curr1_input' : { 'object_path' : 'HSCA/Iout','poll_interval' : 5000,'scale' : 0.25,'units' : 'mA' },
+			'in2_input' : { 'object_path' : 'HSCA/Vout','poll_interval' : 5000,'scale' : 1,'units' : 'mV' },
+		}
+	},
+	'5-0010' :  {
+		'names' : {
+			'curr1_input' : { 'object_path' : 'HSCB/Iout','poll_interval' : 5000,'scale' : 0.25,'units' : 'mA' },
+			'in2_input' : { 'object_path' : 'HSCB/Vout','poll_interval' : 5000,'scale' : 1,'units' : 'mV' },
+		}
+	},
+	'6-0010' :  {
+		'names' : {
+			'curr1_input' : { 'object_path' : 'HSCC/Iout','poll_interval' : 5000,'scale' : 0.25,'units' : 'mA' },
+			'in2_input' : { 'object_path' : 'HSCC/Vout','poll_interval' : 5000,'scale' : 1,'units' : 'mV' },
+		}
+	},
 }
 
+# Miscellaneous non-poll sensor with system specific properties.
+# The sensor id is the same as those defined in ID_LOOKUP['SENSOR'].
+MISC_SENSORS = {
+	0x09 : { 'class' : 'BootCountSensor' },
+	0x05 : { 'class' : 'BootProgressSensor' },
+	0x08 : { 'class' : 'OccStatusSensor',
+		'os_path' : '/sys/class/i2c-adapter/i2c-3/3-0050/online' },
+	0x0A : { 'class' : 'OccStatusSensor',
+		'os_path' : '/sys/class/i2c-adapter/i2c-3/3-0051/online' },
+	0x32 : { 'class' : 'OperatingSystemStatusSensor' },
+	0x33 : { 'class' : 'PowerCap',
+		'os_path' : '/sys/class/hwmon/hwmon3/user_powercap' },
+}
