@@ -4,7 +4,7 @@ Library           String
 Library           RequestsLibrary.RequestsKeywords
 Library           OperatingSystem
 Resource          ../lib/resource.txt
-Library           ../lib/disable_warning_urlib.py
+Library           ../lib/disable_warning_urllib.py
 
 *** Variables ***
 # Response codes
