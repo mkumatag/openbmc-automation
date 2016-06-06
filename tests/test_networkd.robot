@@ -166,6 +166,32 @@ Revert the last ip address change
     should be true   '${isIPfound}' == 'true' and '${isgatewayfound}' == 'true'
 
 
+Get IP Address type
+    [Tags]   GOOD-PATH
+    [Documentation]   This test case tries to set existing ipaddress address and 
+    ...               later tries to verify that ip address type is set to static 
+    ...               due to the operation.
+
+    ${networkInfo}=    Get networkInfo from the interface    eth0
+    ${result}=  convert to integer     ${networkInfo['data'][1]}
+
+    ${CURRENT_MASK}=    calcDottedNetmask     ${result}
+    ${CURRENT_IP}=      set variable    ${networkInfo['data'][2]}
+    ${CURRENT_GATEWAY}=   set variable    ${networkInfo['data'][3]}
+
+    ${arglist}=    Create List    eth0    ${CURRENT_IP}   ${CURRENT_MASK}   ${CURRENT_GATEWAY}
+    ${args}=     Create Dictionary   data=@{arglist}
+    run keyword and ignore error    Call Method    /org/openbmc/NetworkManager/Interface/   SetAddress4    data=${args}
+
+    Wait For Host To Ping       ${CURRENT_IP}
+    
+    @{arglist}=   Create List   eth0
+    ${args}=     Create Dictionary   data=@{arglist}
+    ${resp}=    Call Method    /org/openbmc/NetworkManager/Interface/   GetAddressType    data=${args}
+    ${json} =   to json         ${resp.content}
+    Should Be Equal    ${json['data']}    STATIC
+    should be equal as strings      ${json['status']}      ok
+
 
 Persistency check for ip address
     [Tags]   reboot_test
