@@ -14,7 +14,8 @@ Open Connection And Log In
 
 Run IPMI Command
     [arguments]    ${args}
-    ${output}=  Execute Command    /tmp/ipmitool -I dbus raw ${args}
+    ${output}   ${stderr}=  Execute Command    /tmp/ipmitool -I dbus raw ${args}  return_stderr=True
+    Should Be Empty 	${stderr}
     set test variable    ${OUTPUT}     "${output}"
 
 Run IPMI Standard Command
